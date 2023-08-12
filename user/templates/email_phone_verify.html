@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% include 'header.html' %}
+<body class="show_load">
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-success load" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Loading..</span>
+        </div>
+    </div>
+    <section class="vh-100 gradient-custom">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                    <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                        <div class="card-body p-5 text-center">
+                            <div class="mb-md-5 mt-md-2">
+                                <h2 class="fw-bold mb-4 text-uppercase">OTP Verification</h2>
+                                <form action="" method="POST">
+                                    <div class="mb-5">
+                                        <input type="number" id="floatingInput" data-toggle="tooltip" data-placement="right" title="Enter your email OTP" name="email_otp" class="form-control  email_otp" placeholder="Email OTP" />
+                                    </div>
+                                    <!-- <div class="mb-4">
+                                        <input type="number" id="floatingInput" data-toggle="tooltip" data-placement="right" title="Enter your phone no OTP" name="phone_otp" class="form-control  phone_otp" placeholder="Phone Number OTP" />
+                                    </div> -->
+                                    <button class="btn btn-outline-light px-5 enter" data-toggle="tooltip" data-placement="right" title="Enter" type="button">Enter</button>
+                                </form>
+                                <form method="POST" action="">
+                                    <div class="d-flex mt-4 justify-content-center mb-0">
+                                        <a name ="resend_otp_email" data-toggle="tooltip" data-placement="right" title="Resend OTP Email" class="text-decoration-none text-primary resend_otp_email mx-2" type="button">Resend OTP Email</a>
+                                        <!-- <a name="resend_otp_phone" data-toggle="tooltip" data-placement="right" type="button" title="Resend OTP Phone No" class="text-decoration-none text-danger mx-2 resend_otp_phone">Resend OTP Phone No</a> -->
+                                    </div>
+                                    <div id="timer" class="mt-3 mb-0"></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+<script src="{{url_for('static',filename='scripts/user/otp_verification.js')}}" crossorigin="anonymous"></script>
+</html>

@@ -1,0 +1,109 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+  -webkit-appearance: none;
+}
+input[type=number]{
+  -moz-appearance: textfield;
+}
+
+label.error{
+  color: red;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+.gradient-custom {
+  /* fallback for old browsers */
+  background: #6a11cb;
+  
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+  
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
+  }
+
+.spinner-border{
+  display: block;
+  position: fixed;
+  z-index: 1031;
+  top: 50%;
+  right: 50%; 
+}
+
+#floatingCaptcha{
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: #994aee;
+  background-color: #994aee;
+}
+input[name="captcha"]::-webkit-input-placeholder{
+  color: white;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+.img{
+  position: absolute;
+  width: auto;
+  max-height: 100vh;
+  transform: translate(50);
+}
+
+.resend_otp_email,.resend_otp_phone{
+  display: none;
+}
+
+.carousel-item{
+  height: 100vh;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow-y: hidden;
+}
+
+.d-block{
+  height: 100%;
+}
+.navbar{
+  z-index: 999;
+}
+
+
+.about{
+  display: none;
+  height: 80vh;
+}
+#more{
+  display: none;
+}
+
+.parking{
+  display: none;
+  height: 92.2vh;
+  background: url("../images/parking.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+.contact{
+  display: none;
+  height: 90vh;
+}
+
+.message{
+  resize: none;
+}
+
+.user{
+  width: 25px;
+  height: 25px;
+}
+
+#show_user_data{
+  height: 345px; 
+  overflow-y: auto;
+}

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'header.html' %}
+
+<body class="show_load">
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-success load" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Loading..</span>
+        </div>
+    </div>
+    {% include 'navbar.html' %}
+    {% include 'home.html' %}
+    {% include 'about.html' %}
+    {% include 'car_parking.html' %}
+    {% include 'contact.html' %}
+</body>
+<script src="{{url_for('static',filename='scripts/user/dashboard.js')}}" crossorigin="anonymous"></script>
+</html>

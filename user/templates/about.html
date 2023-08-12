@@ -1,0 +1,23 @@
+{% block head %}
+<div class="container mt-5 about" id="about">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="text-center fw-bolder mt-5 ">About Us</h2>
+            <p class="mt-4 ">Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam distinctio nesciunt veritatis enim reiciendis eum cum deleniti aut, dolore dolor recusandae vitae odit illum fugit rerum veniam doloremque doloribus nam!</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mt-5">
+            <img src="{{url_for('static',filename='images/about.jpg')}}" class="d-block w-75 rounded" alt="...">
+        </div>
+        <div class="col-md-6 mt-4">
+            <h4 class="mt-5 fw-bolder ">Lorem ipsum dolor sit amet</h4>
+            <p class="mt-3 ">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius consectetur tempora expedita enim quas doloremque dolore ipsam fugit excepturi tempore
+                <span id="dots">...</span><span id="more">.Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto corporis optio in animi, laboriosam ea dolore saepe similique vel minus sapiente enim maxime minima recusandae veniam corrupti accusamus harum! Ipsam?</span></p>
+            <button class="btn btn-primary mt-3" onclick="myFunction()" id="myBtn">Read more</button>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

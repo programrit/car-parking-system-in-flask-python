@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% include 'header.html' %}
+<body>
+    {% if print_pdf %}
+      <div class="card bg-light shadow rounded mt-5 col-md-10 mx-auto">
+        <div class="card-body mx-4">
+          <div class="container">
+            <p class=" mt-2 mx-5 text-center" style="font-size: 30px;">Thank for your booking sot</p>
+            <div class="row">
+              <div class="col-md-12">
+                <ul class="list-unstyled d-flex justify-content-between">
+                  <li class="text-black">Name</li><span>{{ print_pdf.name |title }}</span>
+                </ul>
+                <ul class="list-unstyled d-flex justify-content-between">
+                  <li class="mt-1">Payment Id</li><span class="text-muted"></span> {{ print_pdf.payment_id }}
+                </ul>
+                <ul class="list-unstyled d-flex justify-content-between">
+                  <li class="mt-1">Slot Id</li><span class="text-muted"></span> {{ print_pdf.slot_id }}
+                </ul>
+                <ul class="list-unstyled d-flex justify-content-between">
+                  <li class="text-black mt-1">Payment Date&Time</li><span>{{ print_pdf.booking_date }}</span>
+                </ul>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 mt-2">
+                <table class="table mt-3">
+                  <thead>
+                    <tr class="text-center">
+                        <th>From Date</th>
+                        <th>To Date</th>
+                        <th>Number of Date</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr class="text-center">
+                    <td>{{print_pdf.from_date}}</td>
+                    <td>{{print_pdf.to_date}}</td>
+                    <td>{{print_pdf.total_day}}</td>
+                    <td>₹ 50</td>
+                  </tr>
+                </tbody>
+                </table>
+                <div class="d-flex justify-content-center col-md-12">
+                  <h5 class="fw-bolder mx-2">Total</h5>
+                  <h5 class="mx-2">₹ {{print_pdf.amount}}</h6>
+                </div>
+                <div class="mt-4 text-center">
+                  <button class="btn btn-success print" type="button">Print</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% else %}
+    {% endif %}
+</body>
+<script src="{{url_for('static',filename='scripts/user/pdf.js')}}" crossorigin="anonymous"></script>
+</html>
+
+
