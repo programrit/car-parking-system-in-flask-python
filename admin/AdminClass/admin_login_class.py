@@ -8,7 +8,7 @@ from user.mail_verify import email
 bcrypt = Bcrypt()
 db = MySQL()
 
-class AdminLogin:
+class AdminLoginVerify:
     def __init__(self):
         pass
 
@@ -20,7 +20,7 @@ class AdminLogin:
             admin_id = email_exist['admin_id']
             session.permanent = True
             if email_exist:
-                session['id'] = admin_id
+                session['admin_id'] = admin_id
                 get_password = email_exist['password']
                 check_password = bcrypt.check_password_hash(get_password,password)
                 if check_password:

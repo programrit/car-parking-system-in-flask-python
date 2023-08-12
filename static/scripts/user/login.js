@@ -95,14 +95,15 @@ $(document).ready(function(){
                 }
         });
     });
-    $(window).on('load',function(e){
-        e.preventDefault();
-        $('.load').show();
-        $('.gradient-custom').hide();
-        $('.show_load').css({
-            background:"black"
-        });
-        $('.load').hide();
-        $('.gradient-custom').show();
+});
+
+$(window).on('load',function(e){
+    e.preventDefault();
+    $('.load').show();
+    $('.gradient-custom').hide();
+    $('.show_load').css({
+        background:"black"
     });
+    $('.load').hide();
+    $('.gradient-custom').show();
 });

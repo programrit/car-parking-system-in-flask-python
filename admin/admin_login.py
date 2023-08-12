@@ -10,11 +10,15 @@ class AdminLogin:
     @admin_login.route('/admin-login')
     def login_admin():
         try:
-            no_captcha = 6
-            captcha = "".join(random.choices(string.ascii_uppercase+string.digits,k=no_captcha))
-            return render_template('__admin_login.html',title="Admin Login",captcha = captcha)
+            admin = library.admin_exist()
+            if 'admin_id' in session and 'login' in session and admin == "admin":
+                return redirect('/admin-dashboard', code=302)
+            else:
+                no_captcha = 6
+                captcha = "".join(random.choices(string.ascii_uppercase+string.digits,k=no_captcha))
+                return render_template('__admin_login.html',title="Admin Login",captcha = captcha)
         except:
-            return render_template('file_not_found.html',title="404")
+            return render_template('404.html',title="404")
         
     @admin_login.route('/admin-login',methods=['POST','GET'])
     def admin_login_data():
@@ -44,6 +48,6 @@ class AdminLogin:
                 else:
                     return "Something went wrong. Please try agin later"
             else:
-                return render_template('file_not_found.html',title="404")
+                return render_template('404.html',title="404")
         else:
-            return render_template('file_not_found.html',title="404")
+            return render_template('404.html',title="404")

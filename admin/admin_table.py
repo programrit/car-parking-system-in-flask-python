@@ -5,14 +5,14 @@ from admin.libs import Library
 
 
 library = Library()
-class AdminDashboard:
-    admin_dashboard = Blueprint('admin_dashboard',__name__,template_folder='templates')
-    @admin_dashboard.route('/admin-dashboard')
-    def dashboard():
+class AdminTable:
+    admin_table = Blueprint('admin_table',__name__,template_folder='templates')
+    @admin_table.route('/admin-table')
+    def admin_table_data():
         try:
             admin = library.admin_exist()
             if 'admin_id' in session and 'login' in session and admin == "admin":
-                return render_template('__admin_dashboard.html',title="Admin Dashboard")
+                return render_template('__admin_table.html',title="Admin Table")
             else:
                 session.clear()
                 return redirect('/admin-login', code=302)

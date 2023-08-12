@@ -4,13 +4,6 @@
     {% include 'header.html' %}
 </head>
 <body>
-    <!-- <div class="mt-5">
-        <img class="img-fluid mx-auto d-block"  style="width: 30rem; background-color: black;" src="https://img.freepik.com/free-vector/page-found-concept-illustration_114360-1869.jpg" alt="">
-        <div class="text-center">
-            <button class="btn btn-primary rounded-pill" ><a class="text-decoration-none text-white" href="/">Home</a></button>
-        </div>
-    </div> -->
-
     <div id="layoutError">
         <div id="layoutError_content">
             <main>
@@ -20,7 +13,7 @@
                             <div class="text-center mt-4">
                                 <img class="mb-4 img-error w-75" src="{{url_for('static',filename='images/404.svg')}}" />
                                 <p class="lead">This requested URL was not found on this server.</p>
-                                <a href="/">
+                                <a href="/admin-dashboard">
                                     <i class="fas fa-arrow-left me-1"></i>
                                     Return to Dashboard
                                 </a>

@@ -42,9 +42,9 @@ $(document).ready(function(){
                         $('.gradient-custom').show();
                         alertify.set('notifier', 'position', 'top-right');
                         alertify.success("Login Successfully :)");
-                        // setTimeout(function () {
-                        //     window.location.href = "admin-login"
-                        // }, 1000);
+                        setTimeout(function () {
+                            window.location.href = "admin-dashboard"
+                        }, 1000);
                     }else{
                         $('.load').hide();
                         $('.gradient-custom').show();
