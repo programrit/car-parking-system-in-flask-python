@@ -19,7 +19,6 @@ class UserLogin:
             email_exist = cur.fetchone()
             user_id = email_exist['user_id']
             session.permanent = True
-            print("yes")
             if email_exist:
                 session['id'] = user_id
                 if email_exist['verify'] == 1:
@@ -131,7 +130,15 @@ class UserLogin:
                     else:
                         return "logout"
                 else:
-                    return "logout"
+                    cur.execute("SELECT * FROM user_login WHERE user_id = %s", (user_id,))
+                    get_data_1 = cur.fetchone()
+                    if get_data_1:
+                        cur.execute('DELETE FROM user_login WHERE user_id=%s',(user_id,))
+                        db.connection.commit()
+                        cur.close()  
+                        return "logout"
+                    else:
+                        return "logout"
         except Exception as e:
             
             return "failed"

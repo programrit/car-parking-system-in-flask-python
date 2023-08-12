@@ -1,18 +1,63 @@
-from flask import Blueprint,render_template,request,url_for,redirect,session
-import string,random
-from admin.libs import Library
-from flask_bcrypt import Bcrypt
+from flask_mysqldb import MySQL
+import MySQLdb.cursors
+from flask import session,request
+from flask_bcrypt import Bcrypt 
+from user.mail_verify import email
 
 
-
-library = Library()
 bcrypt = Bcrypt()
+db = MySQL()
 
 class AdminLogin:
-    admin_login = Blueprint('user_login',__name__,template_folder='templates')
-    @admin_login.route('/admin-login')
-    def login_admin():
+    def __init__(self):
+        pass
+
+    def login(self,gmail,password):
         try:
-            return render_template('__admin_login.html',title="Admin Login",)
+            cur = db.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute("SELECT * FROM admin WHERE email = %s", (gmail,))
+            email_exist = cur.fetchone()
+            admin_id = email_exist['admin_id']
+            session.permanent = True
+            if email_exist:
+                session['id'] = admin_id
+                get_password = email_exist['password']
+                check_password = bcrypt.check_password_hash(get_password,password)
+                if check_password:
+                    current_device_info = request.headers.get('User-Agent')
+                    device_info  = email_exist['device_info']
+                    if device_info == current_device_info:
+                        return "login"
+                    else:
+                        send_user = email(gmail)
+                        send = send_user.send_email_user(current_device_info)
+                        if send == "send":
+                            cur.execute("SELECT * FROM admin_login WHERE user_id = %s AND device_info=%s", (admin_id,current_device_info,))
+                            check_user_login = cur.fetchone()
+                            if check_user_login:
+                                return "login"
+                            else:
+                                id = email_exist['id']
+                                cur.execute("INSERT INTO admin_login (admin_main_id,admin_id,device_info) VALUES (%s,%s,%s)",(id,admin_id,current_device_info))
+                                db.connection.commit()
+                                cur.close()
+                                return "login"
+                        else:
+                            cur.execute("SELECT * FROM admin_login WHERE user_id = %s AND device_info=%s", (admin_id,current_device_info,))
+                            check_user_login_1 = cur.fetchone()
+                            if check_user_login_1:
+                                return "login"
+                            else:
+                                get_id = email_exist['id']
+                                cur.execute("INSERT INTO admin_login (admin_main_id,admin_id,device_info) VALUES (%s,%s,%s)",(get_id,admin_id,current_device_info))
+                                db.connection.commit()
+                                cur.close()
+                                return "login"
+                else:
+                    return "password incorrect"
+                   
+            else:
+                return "email not found"
         except Exception as e:
-            return render_template('file_not_found.html',title="404")
+            print(e)
+            return "login failed"
