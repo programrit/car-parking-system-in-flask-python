@@ -27,22 +27,31 @@ class UserLogin:
                     if check_password:
                         current_device_info = request.headers.get('User-Agent')
                         device_info  = email_exist['device_info']
-                        if device_info == current_device_info:
-                            return "login"
-                        else:
-                            send_user = email(gmail)
-                            send = send_user.send_email_user(current_device_info)
-                            if send == "send":
-                                cur.execute("SELECT * FROM user_login WHERE user_id = %s AND device_info=%s", (user_id,current_device_info,))
-                                check_user_login = cur.fetchone()
-                                if check_user_login:
-                                    return "login"
+                        if device_info:
+                            if device_info == current_device_info:
+                                return "login"
+                            else:
+                                send_user = email(gmail)
+                                send = send_user.send_email_user(current_device_info)
+                                if send == "send":
+                                    cur.execute("SELECT * FROM user_login WHERE user_id = %s AND device_info=%s", (user_id,current_device_info,))
+                                    check_user_login = cur.fetchone()
+                                    if check_user_login:
+                                        return "login"
+                                    else:
+                                        id = email_exist['id']
+                                        cur.execute("INSERT INTO user_login (user_main_id,user_id,device_info) VALUES (%s,%s,%s)",(id,user_id,current_device_info))
+                                        db.connection.commit()
+                                        cur.close()
+                                        return "login"
                                 else:
-                                    id = email_exist['id']
-                                    cur.execute("INSERT INTO user_login (user_main_id,user_id,device_info) VALUES (%s,%s,%s)",(id,user_id,current_device_info))
-                                    db.connection.commit()
-                                    cur.close()
-                                    return "login"
+                                    return "failed"
+                        else:
+                            update = UserFound.resend_otp()
+                            if update == "not send email":
+                               return "not send email"
+                            elif update == "otp send":
+                                return "not verify"
                             else:
                                 return "failed"
                     else:

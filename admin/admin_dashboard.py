@@ -12,7 +12,11 @@ class AdminDashboard:
         try:
             admin = library.admin_exist()
             if 'admin_id' in session and 'login' in session and admin == "admin":
-                return render_template('__admin_dashboard.html',title="Admin Dashboard")
+                users = library.no_user()
+                other_users = library.other_device_user()
+                admin_data = library.admin()
+                slot = library.no_slot()
+                return render_template('__admin_dashboard.html',title="Admin Dashboard",users=users,other_users=other_users,admin_data=admin_data,slot=slot)
             else:
                 session.clear()
                 return redirect('/admin-login', code=302)

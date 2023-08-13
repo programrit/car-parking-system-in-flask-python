@@ -23,3 +23,41 @@ class AdminDashboardVerify:
         except Exception as e:
             print(e)
             return "admin not found"
+        
+    def no_users(self):
+        try:
+            cur = db.connection.cursor(MySQLdb.cursors.DictCursor)
+            user_data = cur.execute("SELECT * FROM user")
+            return user_data
+        except Exception as e:
+            print(e)
+            return "no user"
+        
+    def other_device_users(self):
+        try:
+            cur = db.connection.cursor(MySQLdb.cursors.DictCursor)
+            user_other_data = cur.execute("SELECT * FROM user_login")
+            return user_other_data
+        except Exception as e:
+            print(e)
+            return "no user"
+    
+    def no_admins(self):
+        try:
+            cur = db.connection.cursor(MySQLdb.cursors.DictCursor)
+            admin = cur.execute("SELECT * FROM admin")
+            return admin
+        except Exception as e:
+            print(e)
+            return "no admin"
+        
+    def slot_available(self):
+        try:
+            cur = db.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute("SELECT * FROM parking WHERE id=%s",(1,))
+            data = cur.fetchone()
+            slot = data['parking_available']
+            return slot
+        except Exception as e:
+            print(e)
+            return "no slot"

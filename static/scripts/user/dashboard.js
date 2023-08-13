@@ -508,60 +508,66 @@ $(document).ready(function(){
   $('.delete_slot').click(function(e){
     e.preventDefault();
     id = $(this).val();
-    Swal.fire({
-      title: 'Are you sure You want to delete the slot?',
-      text: 'Once deleted you cannot recover the slot!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No',
-      reverseButtons: true,
-      allowOutsideClick: false,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // User clicked "Yes, delete it!"
-        // Perform the delete operation here
-        $.ajax({
-          type: 'POST',
-          url:'/',
-          data: {
-            id:id,
-          },success:function(response){
-            if (response == "delete"){
+    if(id == null || id == ""){
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid data");
+    }else{
+      Swal.fire({
+        title: 'Are you sure You want to delete the slot?',
+        text: 'Once deleted you cannot recover the slot!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+        reverseButtons: true,
+        allowOutsideClick: false,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // User clicked "Yes, delete it!"
+          // Perform the delete operation here
+          $.ajax({
+            type: 'POST',
+            url:'/',
+            data: {
+              id:id,
+            },success:function(response){
+              if (response == "delete"){
+                swal.fire({
+                  allowOutsideClick: false,
+                  title: "Deleted",
+                  text: "Your slot has been deleted.",
+                  icon: "success"
+                });
+                $("#example").load(location.href + " #example");
+              }else{
+                swal.fire({
+                  allowOutsideClick: false,
+                  title: "Deleted",
+                  text: response,
+                  icon: "error"
+                });
+              }
+            },error:function(error){
               swal.fire({
                 allowOutsideClick: false,
                 title: "Deleted",
-                text: "Your slot has been deleted.",
-                icon: "success"
-              });
-              $("#example").load(location.href + " #example");
-            }else{
-              swal.fire({
-                allowOutsideClick: false,
-                title: "Deleted",
-                text: response,
+                text: "Something Went Wrong. Please try again later",
                 icon: "error"
               });
             }
-          },error:function(error){
-            swal.fire({
-              allowOutsideClick: false,
-              title: "Deleted",
-              text: "Something Went Wrong. Please try again later",
-              icon: "error"
-            });
-          }
-        });
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        // User clicked "No, cancel!"
-        swal.fire({
-          allowOutsideClick: false,
-          title: "Cancelled",
-          text: "Your slot is safe.",
-          icon: "error"
-        });
-      }
-    });
+          });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          // User clicked "No, cancel!"
+          swal.fire({
+            allowOutsideClick: false,
+            title: "Cancelled",
+            text: "Your slot is safe.",
+            icon: "error"
+          });
+        }
+      });
+    }
+    
   });
 });
 

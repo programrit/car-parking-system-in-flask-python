@@ -34,7 +34,6 @@ class NewUser:
                         cur.close()
                         return "inserted"
         except Exception as e:
-            
             return "not insert"
         
     

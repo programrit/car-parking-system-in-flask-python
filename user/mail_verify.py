@@ -50,6 +50,25 @@ class email:
         except Exception as e:
             print(e)
             return "not send"
+
+    def send_password(self,name,password):
+        From = "photograms19@gmail.com"
+        to = self.email
+        subject ="Admin Username & Password"
+        body="Hello {}, \n\n Your email: {} \n Your Password: {} \n\n Please don't share with anyone".format(name,self.email,password)
+        # print(current_app.logger.debug(msg.send(msg)))
+        # msg = Message("",sender=sender,recipients=[gmail])
+        message ='Subject: {}\n\n{}'.format(subject,body)
+        try:
+            gmail = smtplib.SMTP(current_app.config['MAIL_SERVER'],current_app.config['MAIL_PORT'])
+            gmail.starttls()
+            gmail.login(f"{current_app.config['MAIL_USERNAME']}",f"{current_app.config['MAIL_PASSWORD']}")
+            gmail.sendmail(From,to,message)
+            gmail.quit()
+            return "send"
+        except Exception as e:
+            print(e)
+            return "not send"
             
         
 

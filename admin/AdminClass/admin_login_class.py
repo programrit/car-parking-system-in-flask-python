@@ -26,33 +26,39 @@ class AdminLoginVerify:
                 if check_password:
                     current_device_info = request.headers.get('User-Agent')
                     device_info  = email_exist['device_info']
-                    if device_info == current_device_info:
-                        return "login"
-                    else:
-                        send_user = email(gmail)
-                        send = send_user.send_email_user(current_device_info)
-                        if send == "send":
-                            cur.execute("SELECT * FROM admin_login WHERE user_id = %s AND device_info=%s", (admin_id,current_device_info,))
-                            check_user_login = cur.fetchone()
-                            if check_user_login:
-                                return "login"
-                            else:
-                                id = email_exist['id']
-                                cur.execute("INSERT INTO admin_login (admin_main_id,admin_id,device_info) VALUES (%s,%s,%s)",(id,admin_id,current_device_info))
-                                db.connection.commit()
-                                cur.close()
-                                return "login"
+                    if device_info:
+                        if device_info == current_device_info:
+                            return "login"
                         else:
-                            cur.execute("SELECT * FROM admin_login WHERE user_id = %s AND device_info=%s", (admin_id,current_device_info,))
-                            check_user_login_1 = cur.fetchone()
-                            if check_user_login_1:
-                                return "login"
+                            send_user = email(gmail)
+                            send = send_user.send_email_user(current_device_info)
+                            if send == "send":
+                                cur.execute("SELECT * FROM admin_login WHERE user_id = %s AND device_info=%s", (admin_id,current_device_info,))
+                                check_user_login = cur.fetchone()
+                                if check_user_login:
+                                    return "login"
+                                else:
+                                    id = email_exist['id']
+                                    cur.execute("INSERT INTO admin_login (admin_main_id,admin_id,device_info) VALUES (%s,%s,%s)",(id,admin_id,current_device_info))
+                                    db.connection.commit()
+                                    cur.close()
+                                    return "login"
                             else:
-                                get_id = email_exist['id']
-                                cur.execute("INSERT INTO admin_login (admin_main_id,admin_id,device_info) VALUES (%s,%s,%s)",(get_id,admin_id,current_device_info))
-                                db.connection.commit()
-                                cur.close()
-                                return "login"
+                                cur.execute("SELECT * FROM admin_login WHERE user_id = %s AND device_info=%s", (admin_id,current_device_info,))
+                                check_user_login_1 = cur.fetchone()
+                                if check_user_login_1:
+                                    return "login"
+                                else:
+                                    get_id = email_exist['id']
+                                    cur.execute("INSERT INTO admin_login (admin_main_id,admin_id,device_info) VALUES (%s,%s,%s)",(get_id,admin_id,current_device_info))
+                                    db.connection.commit()
+                                    cur.close()
+                                    return "login"
+                    else:
+                        cur.execute("UPDATE admin SET device_info=%s WHERE email=%s",(current_device_info,gmail))
+                        db.connection.commit()
+                        cur.close()
+                        return "login"
                 else:
                     return "password incorrect"
                    
