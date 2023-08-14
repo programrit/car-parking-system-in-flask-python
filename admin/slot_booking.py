@@ -13,10 +13,11 @@ class UserSlotBooking:
             admin = library.admin_exist()
             if 'admin_id' in session and 'login' in session and admin == "admin":
                 slot_data = library.slot_data()
+                current_admin_data = library.current_admin_data()
                 if slot_data != "no slot":
-                    return render_template('__slot_booking_table.html',title="Slot Booking Data",slot_data=slot_data)
+                    return render_template('__slot_booking_table.html',title="Slot Booking Data",slot_data=slot_data,current_admin_data=current_admin_data)
                 else:
-                    return render_template('__slot_booking_table.html',title="Slot Booking Data")
+                    return render_template('__slot_booking_table.html',title="Slot Booking Data",current_admin_data=current_admin_data)
             else:
                 session.clear()
                 return redirect('/admin-login', code=302)

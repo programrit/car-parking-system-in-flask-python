@@ -1,4 +1,4 @@
-from flask import Blueprint,render_template,redirect,session
+from flask import Blueprint,render_template,redirect,session,request
 
 from admin.libs import Library
 
@@ -16,10 +16,27 @@ class AdminDashboard:
                 other_users = library.other_device_user()
                 admin_data = library.admin()
                 slot = library.no_slot()
-                return render_template('__admin_dashboard.html',title="Admin Dashboard",users=users,other_users=other_users,admin_data=admin_data,slot=slot)
+                current_admin_data = library.current_admin_data()
+                return render_template('__admin_dashboard.html',title="Admin Dashboard",users=users,other_users=other_users,admin_data=admin_data,slot=slot,current_admin_data=current_admin_data)
             else:
                 session.clear()
                 return redirect('/admin-login', code=302)
         except:
             return render_template('404.html',title="404")
+        
+    @admin_dashboard.route('/logout', methods=['POST','GET'])
+    def logout():
+        if request.method == 'POST':
+            if request.form.get('logout'):
+                logout = library.logout_user()
+                if logout == "logout":
+                    session.clear()
+                    return "logout"
+                else:
+                    return "User not found"
+        elif request.method == 'GET':
+            return render_template('404.html',title="404")
+        else:
+            return render_template('404.html',title="404")
+
      

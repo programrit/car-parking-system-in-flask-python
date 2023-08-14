@@ -86,12 +86,12 @@ class UserLogin:
             return "user not found"
         
 
-    def update_user(self,name,email,phone,profile):
+    def update_user(self,name,profile):
         try:
             cur = db.connection.cursor(MySQLdb.cursors.DictCursor)
             user_id = session['id']
             if profile == "empty":
-                cur.execute('UPDATE user SET name=%s , email=%s , phone_no=%s WHERE user_id=%s',(name,email,phone,user_id,))
+                cur.execute('UPDATE user SET name=%s  WHERE user_id=%s',(name,user_id,))
                 db.connection.commit()
                 cur.close()
                 return "update"
@@ -100,19 +100,18 @@ class UserLogin:
                 check_profile = cur.fetchone()
                 print(check_profile['profile'])
                 if check_profile['profile'] == "" or check_profile['profile'] ==None:
-                    cur.execute('UPDATE user SET name=%s , email=%s , phone_no=%s, profile=%s WHERE user_id=%s',(name,email,phone,profile,user_id,))
+                    cur.execute('UPDATE user SET name=%s, profile=%s WHERE user_id=%s',(name,profile,user_id,))
                     db.connection.commit()
                     cur.close()
                     return "update"
                 else:
                     try:
                         os.remove(os.path.join("C:/Users/Ram/Desktop/test/static/user_profile/",check_profile['profile']))
-                        cur.execute('UPDATE user SET name=%s , email=%s , phone_no=%s, profile=%s WHERE user_id=%s',(name,email,phone,profile,user_id,))
+                        cur.execute('UPDATE user SET name=%s , profile=%s WHERE user_id=%s',(name,profile,user_id,))
                         db.connection.commit()
                         cur.close()
                         return "update"
                     except Exception as e:
-                        
                         return "update failed"
 
         except Exception as e:

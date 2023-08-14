@@ -8,6 +8,7 @@ $(document).ready(function(){
         var phone = $('.phone').val();
         var password = $('.password').val();
         var confirm_password = $('.confirm_password').val();
+        const csrf_token = $('#csrf_token').val();
         const valid_name =/^[a-zA-Z]+$/
         const validate_email = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
         const validate_phone =/^[6-9]\d{9}$/;
@@ -45,6 +46,9 @@ $(document).ready(function(){
         }else if(password != confirm_password){
             alertify.set('notifier', 'position', 'top-right');
             alertify.error("Password not match");
+        }else if(csrf_token == "" || csrf_token ==null){
+            alertify.set("notifier", "position", "top-right");
+            alertify.error("Invalid csrf token");
         }else{
             $('.load').show();
             $('.gradient-custom').hide();
@@ -54,7 +58,9 @@ $(document).ready(function(){
             $.ajax({
                 type:"POST",
                 url:"user-signup",
-                data:{
+                headers:{
+                    "X-CSRFToken":csrf_token
+                },data:{
                     name:name,
                     email:email,
                     phone:phone,

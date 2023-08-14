@@ -10,10 +10,11 @@ class UserOtherTable:
             admin = library.admin_exist()
             if 'admin_id' in session and 'login' in session and admin == "admin":
                 other_device_data = library.other_device_user_data()
+                current_admin_data = library.current_admin_data()
                 if other_device_data !="no users":
-                    return render_template('__user_other_device_table.html',title="User login Other Device",other_device_data = other_device_data)
+                    return render_template('__user_other_device_table.html',title="User login Other Device",other_device_data = other_device_data,current_admin_data=current_admin_data)
                 else:
-                    return render_template('__user_other_device_table.html',title="User login Other Device")
+                    return render_template('__user_other_device_table.html',title="User login Other Device",current_admin_data=current_admin_data)
             else:
                 session.clear()
                 return redirect('/admin-login', code=302)

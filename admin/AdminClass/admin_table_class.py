@@ -11,6 +11,20 @@ class AdminTableData:
     def __init__(self):
         pass
 
+    def current_admin_data(self):
+        try:
+            admin_id = session['admin_id']
+            cur = db.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute("SELECT * FROM admin WHERE admin_id=%s",(admin_id,))
+            current_admin_data = cur.fetchone()
+            if current_admin_data:
+                return current_admin_data
+            else:
+                return "no admin"
+        except Exception as e:
+            print(e)
+            return "no admin"
+
     def admins_data(self):
         try:
             cur = db.connection.cursor(MySQLdb.cursors.DictCursor)

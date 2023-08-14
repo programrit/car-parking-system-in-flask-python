@@ -61,7 +61,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
 // user_table start
 
-// add new user
+// add new user -
 $(document).ready(function () {
   $(".add").click(function (e) {
     e.preventDefault();
@@ -70,6 +70,7 @@ $(document).ready(function () {
     var phone = $(".phone").val();
     var password = $(".password").val();
     var confirm_password = $(".confirm_password").val();
+    const csrf_token = $("#csrf_token").val();
     const valid_name = /^[a-zA-Z]+$/;
     const validate_email = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
     const validate_phone = /^[6-9]\d{9}$/;
@@ -108,6 +109,9 @@ $(document).ready(function () {
     } else if (password != confirm_password) {
       alertify.set("notifier", "position", "top-right");
       alertify.error("Password not match");
+    } else if (csrf_token == "" || csrf_token == null) {
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
     } else {
       $(".load").show();
       $(".add").prop("disabled", true);
@@ -115,6 +119,9 @@ $(document).ready(function () {
       $.ajax({
         type: "POST",
         url: "user-table",
+        headers: {
+          "X-CSRFToken": csrf_token,
+        },
         data: {
           name: name,
           email: email,
@@ -152,19 +159,26 @@ $(document).ready(function () {
   });
 });
 
-// update user data fetch and show
+// update user data fetch and show -
 $(document).ready(function () {
-  $('.id').hide();    
+  $(".id").hide();
   $(".show_data").click(function (e) {
     e.preventDefault();
     const value = $(this).val();
+    const csrf_token = $("#csrf_token").val();
     if (value == "" || value == null) {
       alertify.set("notifier", "position", "top-right");
       alertify.error("Invaild data");
+    } else if (csrf_token == "" || csrf_token == null) {
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
     } else {
       $.ajax({
         type: "POST",
         url: "user-table",
+        headers: {
+          "X-CSRFToken": csrf_token,
+        },
         data: {
           id: value,
         },
@@ -177,7 +191,7 @@ $(document).ready(function () {
             $(".update_name").val(data.name);
             $(".update_email").val(data.email);
             $(".update_phone").val(data.phone_no);
-            $('.id').val(value);
+            $(".id").val(value);
             $("#staticModalUpdate").modal("show");
           }
         },
@@ -190,13 +204,14 @@ $(document).ready(function () {
   });
 });
 
-// update user data
+// update user data -
 $(document).ready(function () {
-  $('.id').hide();  
+  $(".id").hide();
   $(".update").click(function (e) {
     e.preventDefault();
+    const csrf_token = $("#csrf_token").val();
     var name = $(".update_name").val();
-    const user_id = $('.id').val();
+    const user_id = $(".id").val();
     const valid_name = /^[a-zA-Z]+$/;
     if (name == "" || name == null) {
       alertify.set("notifier", "position", "top-right");
@@ -207,6 +222,9 @@ $(document).ready(function () {
     } else if (!valid_name.test(name)) {
       alertify.set("notifier", "position", "top-right");
       alertify.error("Please enter valid name");
+    } else if (csrf_token == "" || csrf_token == null) {
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
     } else {
       $(".load").show();
       $(".update").prop("disabled", true);
@@ -214,8 +232,11 @@ $(document).ready(function () {
       $.ajax({
         type: "POST",
         url: "user-table",
+        headers: {
+          "X-CSRFToken": csrf_token,
+        },
         data: {
-          user_id:user_id,
+          user_id: user_id,
           name: name,
         },
         success: function (data) {
@@ -248,23 +269,27 @@ $(document).ready(function () {
   });
 });
 
-// delete user data
+// delete user data -
 
-$(document).ready(function(){
-  $('.delete_data').click(function(e){
+$(document).ready(function () {
+  $(".delete_data").click(function (e) {
     e.preventDefault();
-    const user_id  = $(this).val();
-    if (user_id == null || user_id==""){
+    const user_id = $(this).val();
+    const csrf_token = $("#csrf_token").val();
+    if (user_id == null || user_id == "") {
       alertify.set("notifier", "position", "top-right");
       alertify.error("Invalid data");
-    }else{
+    } else if (csrf_token == "" || csrf_token == null) {
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
+    } else {
       Swal.fire({
-        title: 'Are you sure You want to delete the user data?',
-        text: 'Once deleted you cannot recover the user data!',
-        icon: 'warning',
+        title: "Are you sure You want to delete the user data?",
+        text: "Once deleted you cannot recover the user data!",
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No',
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
         reverseButtons: true,
         allowOutsideClick: false,
       }).then((result) => {
@@ -272,35 +297,42 @@ $(document).ready(function(){
           // User clicked "Yes, delete it!"
           // Perform the delete operation here
           $.ajax({
-            type: 'POST',
-            url:'user-table',
+            type: "POST",
+            url: "user-table",
+            headers: {
+              "X-CSRFToken": csrf_token,
+            },
             data: {
-              delete_id:user_id,
-            },success:function(response){
-              if (response == "delete"){
+              delete_id: user_id,
+            },
+            success: function (response) {
+              if (response == "delete") {
                 swal.fire({
                   allowOutsideClick: false,
                   title: "Deleted",
                   text: "Your data has been deleted.",
-                  icon: "success"
+                  icon: "success",
                 });
-                $("#datatablesSimple").load(location.href + " #datatablesSimple");
-              }else{
+                $("#datatablesSimple").load(
+                  location.href + " #datatablesSimple"
+                );
+              } else {
                 swal.fire({
                   allowOutsideClick: false,
                   title: "Deleted",
                   text: response,
-                  icon: "error"
+                  icon: "error",
                 });
               }
-            },error:function(error){
+            },
+            error: function (error) {
               swal.fire({
                 allowOutsideClick: false,
                 title: "Deleted",
                 text: "Something Went Wrong. Please try again later",
-                icon: "error"
+                icon: "error",
               });
-            }
+            },
           });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           // User clicked "No, cancel!"
@@ -308,7 +340,7 @@ $(document).ready(function(){
             allowOutsideClick: false,
             title: "Cancelled",
             text: "Your data is safe.",
-            icon: "error"
+            icon: "error",
           });
         }
       });
@@ -320,13 +352,14 @@ $(document).ready(function(){
 
 // admin_table start
 
-// add new admin
+// add new admin -
 $(document).ready(function () {
   $(".add_admin").click(function (e) {
     e.preventDefault();
     var name = $(".admin_name").val();
     var email = $(".admin_email").val();
     var password = $(".admin_password").val();
+    const csrf_token = $("#csrf_token").val();
     const valid_name = /^[a-zA-Z]+$/;
     const validate_email = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
     const validate_password =
@@ -352,6 +385,9 @@ $(document).ready(function () {
     } else if (!password.match(validate_password)) {
       alertify.set("notifier", "position", "top-right");
       alertify.error("Please enter your strong password");
+    } else if (csrf_token == "" || csrf_token == null) {
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
     } else {
       $(".load").show();
       $(".add_admin").prop("disabled", true);
@@ -359,6 +395,9 @@ $(document).ready(function () {
       $.ajax({
         type: "POST",
         url: "admin-table",
+        headers: {
+          "X-CSRFToken": csrf_token,
+        },
         data: {
           name: name,
           email: email,
@@ -394,22 +433,26 @@ $(document).ready(function () {
   });
 });
 
-// delete admin data
-$(document).ready(function(e){
-  $('.delete_admin').click(function(e){
+// delete admin data -
+$(document).ready(function (e) {
+  $(".delete_admin").click(function (e) {
     e.preventDefault();
     const admin_id = $(this).val();
-    if (admin_id == "" || admin_id == null){
+    const csrf_token = $("#csrf_token").val();
+    if (admin_id == "" || admin_id == null) {
       alertify.set("notifier", "position", "top-right");
       alertify.error("Invalid data");
-    }else{
+    } else if (csrf_token == "" || csrf_token == null) {
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
+    } else {
       Swal.fire({
-        title: 'Are you sure You want to delete the admin data?',
-        text: 'Once deleted you cannot recover the admin data!',
-        icon: 'warning',
+        title: "Are you sure You want to delete the admin data?",
+        text: "Once deleted you cannot recover the admin data!",
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No',
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
         reverseButtons: true,
         allowOutsideClick: false,
       }).then((result) => {
@@ -417,35 +460,42 @@ $(document).ready(function(e){
           // User clicked "Yes, delete it!"
           // Perform the delete operation here
           $.ajax({
-            type: 'POST',
-            url:'admin-table',
+            type: "POST",
+            url: "admin-table",
+            headers: {
+              "X-CSRFToken": csrf_token,
+            },
             data: {
-              admin_id:admin_id,
-            },success:function(response){
-              if (response == "delete"){
+              admin_id: admin_id,
+            },
+            success: function (response) {
+              if (response == "delete") {
                 swal.fire({
                   allowOutsideClick: false,
                   title: "Deleted",
                   text: "Your data has been deleted.",
-                  icon: "success"
+                  icon: "success",
                 });
-                $("#datatablesSimple").load(location.href + " #datatablesSimple");
-              }else{
+                $("#datatablesSimple").load(
+                  location.href + " #datatablesSimple"
+                );
+              } else {
                 swal.fire({
                   allowOutsideClick: false,
                   title: "Deleted",
                   text: response,
-                  icon: "error"
+                  icon: "error",
                 });
               }
-            },error:function(error){
+            },
+            error: function (error) {
               swal.fire({
                 allowOutsideClick: false,
                 title: "Deleted",
                 text: "Something Went Wrong. Please try again later",
-                icon: "error"
+                icon: "error",
               });
-            }
+            },
           });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           // User clicked "No, cancel!"
@@ -453,7 +503,7 @@ $(document).ready(function(e){
             allowOutsideClick: false,
             title: "Cancelled",
             text: "Your data is safe.",
-            icon: "error"
+            icon: "error",
           });
         }
       });
@@ -463,26 +513,29 @@ $(document).ready(function(e){
 
 // admin_table end
 
-
 // user_other_device_table start
 
-// delete user other device data
+// delete user other device data -
 
-$(document).ready(function(e){
-  $('.other_user_id').click(function(e){
+$(document).ready(function (e) {
+  $(".other_user_id").click(function (e) {
     e.preventDefault();
     const other_user_id = $(this).val();
-    if (other_user_id == "" || other_user_id == null){
+    const csrf_token = $("#csrf_token").val();
+    if (other_user_id == "" || other_user_id == null) {
       alertify.set("notifier", "position", "top-right");
       alertify.error("Invalid data");
-    }else{
+    } else if (csrf_token == "" || csrf_token == null) {
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
+    } else {
       Swal.fire({
-        title: 'Are you sure You want to delete the user data?',
-        text: 'Once deleted you cannot recover the user data!',
-        icon: 'warning',
+        title: "Are you sure You want to delete the user data?",
+        text: "Once deleted you cannot recover the user data!",
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No',
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
         reverseButtons: true,
         allowOutsideClick: false,
       }).then((result) => {
@@ -490,35 +543,42 @@ $(document).ready(function(e){
           // User clicked "Yes, delete it!"
           // Perform the delete operation here
           $.ajax({
-            type: 'POST',
-            url:'user-login-other-device',
+            type: "POST",
+            url: "user-login-other-device",
+            headers: {
+              "X-CSRFToken": csrf_token,
+            },
             data: {
-              other_user_id:other_user_id,
-            },success:function(response){
-              if (response == "delete"){
+              other_user_id: other_user_id,
+            },
+            success: function (response) {
+              if (response == "delete") {
                 swal.fire({
                   allowOutsideClick: false,
                   title: "Deleted",
                   text: "Your data has been deleted.",
-                  icon: "success"
+                  icon: "success",
                 });
-                $("#datatablesSimple").load(location.href + " #datatablesSimple");
-              }else{
+                $("#datatablesSimple").load(
+                  location.href + " #datatablesSimple"
+                );
+              } else {
                 swal.fire({
                   allowOutsideClick: false,
                   title: "Deleted",
                   text: response,
-                  icon: "error"
+                  icon: "error",
                 });
               }
-            },error:function(error){
+            },
+            error: function (error) {
               swal.fire({
                 allowOutsideClick: false,
                 title: "Deleted",
                 text: "Something Went Wrong. Please try again later",
-                icon: "error"
+                icon: "error",
               });
-            }
+            },
           });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           // User clicked "No, cancel!"
@@ -526,7 +586,7 @@ $(document).ready(function(e){
             allowOutsideClick: false,
             title: "Cancelled",
             text: "Your data is safe.",
-            icon: "error"
+            icon: "error",
           });
         }
       });
@@ -538,23 +598,27 @@ $(document).ready(function(e){
 
 // slot_booking_table start
 
-// delete slot booking
+// delete slot booking -
 
-$(document).ready(function(e){
-  $('.slot_id').click(function(e){
+$(document).ready(function (e) {
+  $(".slot_id").click(function (e) {
     e.preventDefault();
     const slot_id = $(this).val();
-    if (slot_id == "" || slot_id == null){
+    const csrf_token = $("#csrf_token").val();
+    if (slot_id == "" || slot_id == null) {
       alertify.set("notifier", "position", "top-right");
       alertify.error("Invalid data");
-    }else{
+    } else if (csrf_token == "" || csrf_token == null) {
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
+    } else {
       Swal.fire({
-        title: 'Are you sure You want to delete the slot data?',
-        text: 'Once deleted you cannot recover the slot data!',
-        icon: 'warning',
+        title: "Are you sure You want to delete the slot data?",
+        text: "Once deleted you cannot recover the slot data!",
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No',
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
         reverseButtons: true,
         allowOutsideClick: false,
       }).then((result) => {
@@ -562,35 +626,42 @@ $(document).ready(function(e){
           // User clicked "Yes, delete it!"
           // Perform the delete operation here
           $.ajax({
-            type: 'POST',
-            url:'user-slot-table',
+            type: "POST",
+            url: "user-slot-table",
+            headers: {
+              "X-CSRFToken": csrf_token,
+            },
             data: {
-              slot_id:slot_id,
-            },success:function(response){
-              if (response == "delete"){
+              slot_id: slot_id,
+            },
+            success: function (response) {
+              if (response == "delete") {
                 swal.fire({
                   allowOutsideClick: false,
                   title: "Deleted",
                   text: "Your data has been deleted.",
-                  icon: "success"
+                  icon: "success",
                 });
-                $("#datatablesSimple").load(location.href + " #datatablesSimple");
-              }else{
+                $("#datatablesSimple").load(
+                  location.href + " #datatablesSimple"
+                );
+              } else {
                 swal.fire({
                   allowOutsideClick: false,
                   title: "Deleted",
                   text: response,
-                  icon: "error"
+                  icon: "error",
                 });
               }
-            },error:function(error){
+            },
+            error: function (error) {
               swal.fire({
                 allowOutsideClick: false,
                 title: "Deleted",
                 text: "Something Went Wrong. Please try again later",
-                icon: "error"
+                icon: "error",
               });
-            }
+            },
           });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           // User clicked "No, cancel!"
@@ -598,7 +669,7 @@ $(document).ready(function(e){
             allowOutsideClick: false,
             title: "Cancelled",
             text: "Your data is safe.",
-            icon: "error"
+            icon: "error",
           });
         }
       });
@@ -610,22 +681,26 @@ $(document).ready(function(e){
 
 // admin_other_device_table start
 
-// delete admin other device
-$(document).ready(function(e){
-  $('.other_admin_id').click(function(e){
+// delete admin other device -
+$(document).ready(function (e) {
+  $(".other_admin_id").click(function (e) {
     e.preventDefault();
     const other_admin_id = $(this).val();
-    if (other_admin_id == "" || other_admin_id == null){
+    const csrf_token = $("#csrf_token").val();
+    if (other_admin_id == "" || other_admin_id == null) {
       alertify.set("notifier", "position", "top-right");
       alertify.error("Invalid data");
-    }else{
+    } else if (csrf_token == "" || csrf_token == null) {
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
+    } else {
       Swal.fire({
-        title: 'Are you sure You want to delete the admin data?',
-        text: 'Once deleted you cannot recover the admin data!',
-        icon: 'warning',
+        title: "Are you sure You want to delete the admin data?",
+        text: "Once deleted you cannot recover the admin data!",
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No',
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
         reverseButtons: true,
         allowOutsideClick: false,
       }).then((result) => {
@@ -633,35 +708,42 @@ $(document).ready(function(e){
           // User clicked "Yes, delete it!"
           // Perform the delete operation here
           $.ajax({
-            type: 'POST',
-            url:'admin-login-other-device',
+            type: "POST",
+            url: "admin-login-other-device",
+            headers: {
+              "X-CSRFToken": csrf_token,
+            },
             data: {
-              other_admin_id:other_admin_id,
-            },success:function(response){
-              if (response == "delete"){
+              other_admin_id: other_admin_id,
+            },
+            success: function (response) {
+              if (response == "delete") {
                 swal.fire({
                   allowOutsideClick: false,
                   title: "Deleted",
                   text: "Your data has been deleted.",
-                  icon: "success"
+                  icon: "success",
                 });
-                $("#datatablesSimple").load(location.href + " #datatablesSimple");
-              }else{
+                $("#datatablesSimple").load(
+                  location.href + " #datatablesSimple"
+                );
+              } else {
                 swal.fire({
                   allowOutsideClick: false,
                   title: "Deleted",
                   text: response,
-                  icon: "error"
+                  icon: "error",
                 });
               }
-            },error:function(error){
+            },
+            error: function (error) {
               swal.fire({
                 allowOutsideClick: false,
                 title: "Deleted",
                 text: "Something Went Wrong. Please try again later",
-                icon: "error"
+                icon: "error",
               });
-            }
+            },
           });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           // User clicked "No, cancel!"
@@ -669,7 +751,7 @@ $(document).ready(function(e){
             allowOutsideClick: false,
             title: "Cancelled",
             text: "Your data is safe.",
-            icon: "error"
+            icon: "error",
           });
         }
       });
@@ -677,4 +759,158 @@ $(document).ready(function(e){
   });
 });
 
-// admin_other_device_table start
+// admin_other_device_table end
+
+// disable current admin data
+$(document).ready(function () {
+  $(".current_id").prop("disabled", true);
+  $(".current_name").prop("disabled", true);
+  $(".current_email").prop("disabled", true);
+});
+
+// change password start -
+$(document).ready(function () {
+  $(".update_password").click(function (e) {
+    const validate_password =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{7,}$/;
+    const old_password = $(".old_password").val();
+    const new_password = $(".new_password").val();
+    const confirm_password = $(".confirm_password").val();
+    const csrf_token = $("#csrf_token").val();
+    if (old_password == "" || old_password == null) {
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Please enter your old password");
+    } else if (new_password == "" || new_password == null) {
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Please enter your new password");
+    } else if (!validate_password.test(new_password)) {
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Please enter strong new password");
+    } else if (confirm_password == "" || confirm_password == null) {
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Please enter your confirm password");
+    } else if (new_password != confirm_password) {
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Please not match");
+    } else if (csrf_token == "" || csrf_token == null) {
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
+    } else {
+      $(".load").show();
+      $(".update_password").prop("disabled", true);
+      $(".cancel_password").prop("disabled", true);
+      $.ajax({
+        type: "POST",
+        url: "settings",
+        headers: {
+          "X-CSRFToken": csrf_token,
+        },
+        data: {
+          old_password: old_password,
+          new_password: new_password,
+        },
+        success: function (data) {
+          if (data == "update") {
+            alertify.set("notifier", "position", "top-right");
+            alertify.success("Password update successfully");
+            $(".load").hide();
+            $(".update_password").prop("disabled", false);
+            $(".cancel_password").prop("disabled", false);
+            setTimeout(function () {
+              window.location.href = "settings";
+            }, 1000);
+          } else {
+            $(".load").hide();
+            $(".update_password").prop("disabled", false);
+            $(".cancel_password").prop("disabled", false);
+            alertify.set("notifier", "position", "top-right");
+            alertify.error(data);
+          }
+        },
+        error: function (error) {
+          $(".load").hide();
+          $(".update_password").prop("disabled", false);
+          $(".cancel_password").prop("disabled", false);
+          alertify.set("notifier", "position", "top-right");
+          alertify.error("Something went wrong. Please try again later");
+        },
+      });
+    }
+  });
+});
+
+// change password end
+
+// logout start
+$(document).ready(function () {
+  $(".logout").click(function () {
+    const csrf_token = $('#csrf_token').val();
+    if (csrf_token == "" || csrf_token == null) {
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
+    } else {
+      Swal.fire({
+        title: "Are you sure You want to logout?",
+        text: "Once logout you must be login again!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
+        reverseButtons: true,
+        allowOutsideClick: false,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // User clicked "Yes, delete it!"
+          // Perform the delete operation here
+          $.ajax({
+            type: "POST",
+            url: "logout",
+            headers:{
+              "X-CSRFToken":csrf_token
+            },data: {
+              logout: true,
+            },
+            success: function (response) {
+              if (response == "logout") {
+                swal.fire({
+                  allowOutsideClick: false,
+                  title: "Logout",
+                  text: "Logout Successfully.",
+                  icon: "success",
+                });
+                setTimeout(function () {
+                  window.location.href = "admin-login";
+                }, 1000);
+              } else {
+                swal.fire({
+                  allowOutsideClick: false,
+                  title: "Deleted",
+                  text: response,
+                  icon: "error",
+                });
+              }
+            },
+            error: function (error) {
+              swal.fire({
+                allowOutsideClick: false,
+                title: "Logout",
+                text: "Something Went Wrong. Please try again later",
+                icon: "error",
+              });
+            },
+          });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          // User clicked "No, cancel!"
+          swal.fire({
+            allowOutsideClick: false,
+            title: "Cancelled",
+            text: "Your not logout.",
+            icon: "error",
+          });
+        }
+      });
+    }
+  });
+});
+
+// logout end

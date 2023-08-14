@@ -1,9 +1,10 @@
 
-// otp verification from new user
+// otp verification from new user -
 $(document).ready(function () {
   $(".load").hide();
   $(".enter").click(function (e) {
     e.preventDefault();
+    const csrf_token = $('#csrf_token').val();
     const email_otp =$('.email_otp').val();
     if(email_otp == "" || email_otp == null){
       alertify.set('notifier', 'position', 'top-right');
@@ -11,6 +12,9 @@ $(document).ready(function () {
     }else if(isNaN(email_otp)){
       alertify.set('notifier', 'position', 'top-right');
       alertify.error("Please enter valid OTP");
+    }else if(csrf_token == "" || csrf_token ==null){
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
     }else{
       $(".load").show();
       $(".gradient-custom").hide();
@@ -20,7 +24,9 @@ $(document).ready(function () {
       $.ajax({
         type:"POST",
         url:"email-verification",
-        data: {email_otp : email_otp},
+        headers:{
+          "X-CSRFToken":csrf_token
+        },data: {email_otp : email_otp},
         success:function(data){
           if(data == "signup successfully"){
             $('.load').hide();

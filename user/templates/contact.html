@@ -16,6 +16,7 @@
                 <div class="card-body">
                   <h5 class="card-title text-center text-success fw-bolder">Send Message</h5>
                   <form action="" method="POST">
+                    <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="d-flex justify-content-center mt-3">
                         <div class="col-md-4 mb-2 mx-2">
                             <input type="text" class="form-control contact_name" name="contact_name" autocomplete="off" placeholder="Name" aria-label="Recipient's date" aria-describedby="basic-addon2">

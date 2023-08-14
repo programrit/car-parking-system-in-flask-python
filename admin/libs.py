@@ -5,6 +5,7 @@ from admin.AdminClass.slot_booking_table_class import SlotBookingTable
 from admin.AdminClass.user_other_device_table_class import UserOtherTableData
 from admin.AdminClass.admin_table_class import AdminTableData
 from admin.AdminClass.admin_other_device_table_class import AdminOtherTableData
+from admin.AdminClass.settings_class import SettingChangePassword
 
 
 class Library:
@@ -104,5 +105,30 @@ class Library:
     # delete other device login admin
     def delete_other_admin_data(self,other_admin_id):
         return AdminOtherTableData.delete_other_admin_data_in_admin(self,other_admin_id)
+
+    # fetch current admin data
+
+    def current_admin_data(self):
+        current_admin = AdminTableData.current_admin_data(self)
+        if current_admin !="no admin":
+            return current_admin
+        else:
+            return "Null"
+        
+    # change password
+    def change_password(self,old_password,new_password):
+        delete = SettingChangePassword.delete_other_account_password(self)
+        if delete == "delete":
+            return SettingChangePassword.change_password_settings(self,old_password,new_password)
+        else:
+            return SettingChangePassword.change_password_settings(self,old_password,new_password)
+        
+    # logout
+    def logout_user(self):
+        return AdminDashboardVerify.delete_other_account_in_logout(self)
+
+
+
+    
 
 

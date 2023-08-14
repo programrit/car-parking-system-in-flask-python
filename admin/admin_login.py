@@ -1,7 +1,7 @@
 from flask import Blueprint,render_template,request,url_for,redirect,session
 import string,random
 from admin.libs import Library
-from flask_bcrypt import Bcrypt
+
 
 
 library = Library()

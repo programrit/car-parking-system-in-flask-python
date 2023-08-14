@@ -2,7 +2,8 @@
     <!-- Navbar Brand-->
     <a class="navbar-brand ps-3" href="admin-dashboard">Admin Panel</a>
     <!-- Sidebar Toggle-->
-    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+            class="fas fa-bars"></i></button>
     <!-- Navbar Search-->
     <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
         <div class="input-group">
@@ -11,13 +12,59 @@
     <!-- Navbar-->
     <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#!">Profile</a></li>
-                <li><a class="dropdown-item" href="#!">Change Password</a></li>
-                <li><hr class="dropdown-divider" /></li>
-                <li><a class="dropdown-item" href="#!">Logout</a></li>
+                <li><a class="dropdown-item" type="button" data-bs-toggle="modal"
+                        data-bs-target="#staticModalProfile">Profile</a></li>
+                <li><a class="dropdown-item" href="settings">Settings</a></li>
+                <li>
+                    <hr class="dropdown-divider" />
+                </li>
+                <li>
+                    <form action="" method="POST">
+                        <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
+                        <a class="dropdown-item logout" type="submit">Logout</a>
+                    </form>
+                </li>
             </ul>
         </li>
     </ul>
 </nav>
+
+
+<div class="modal fade" id="staticModalProfile" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticLabelProfile" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticLabelProfile">Profile</h1>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {% if current_admin_data %}
+            <div class="modal-body">
+                <div class="mb-3 mt-3">
+                    <label for="floatingInputId">Id</label>
+                    <input type="text" id="floatingInputId" name="user_id" class="form-control current_id"
+                        placeholder="{{ current_admin_data['admin_id'] }}" />
+                </div>
+                <div class="mb-3 mt-3">
+                    <label for="floatingInputName">Name</label>
+                    <input type="text" id="floatingInputName" name="name" class="form-control current_name"
+                        placeholder="{{ current_admin_data['name'] }}" />
+                </div>
+                <div class="mb-3">
+                    <label for="floatingInputEmail">Email</label>
+                    <input type="email" id="floatingInputEmail" name="email" class="form-control current_email"
+                        placeholder="{{ current_admin_data['email'] }}" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close">Close</button>
+            </div>
+            {% else %}
+            <p class="text-center text-danger">No Data</p>
+            {% endif %}
+        </div>
+    </div>
+</div>

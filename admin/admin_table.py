@@ -12,8 +12,9 @@ class AdminTable:
             admin = library.admin_exist()
             if 'admin_id' in session and 'login' in session and admin == "admin":
                 admin = library.admin_data()
+                current_admin_data = library.current_admin_data()
                 if admin != "no admin":
-                    return render_template('__admin_table.html',title="Admin Table",admin=admin)
+                    return render_template('__admin_table.html',title="Admin Table",admin=admin,current_admin_data=current_admin_data)
                 else:
                     return render_template('__admin_table.html',title="Admin Table")
             else:
@@ -39,7 +40,7 @@ class AdminTable:
                     first_random+=digits[math.floor(random.random()*10)]
                 for i in range(7):
                     second_random+=digits[math.floor(random.random()*10)]
-                user_id = "USER_"+first_random+second_random
+                user_id = "ADMIN_"+first_random+second_random
                 add = library.add_new_admin(user_id,name,gmail,password)
                 if add == "add":
                     return "add"

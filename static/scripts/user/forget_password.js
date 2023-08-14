@@ -1,9 +1,10 @@
-// forget password to get email and send otp from user (user-login/forget-password)
+// forget password to get email and send otp from user (user-login/forget-password) -
 $(document).ready(function () {
   $(".load").hide();
   $(".forget").click(function (e) {
     e.preventDefault();
     const email = $(".email").val();
+    const csrf_token = $('#csrf_token').val();
     const validate_email = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
     if (email == "" || email == null) {
       alertify.set("notifier", "position", "top-right");
@@ -11,7 +12,10 @@ $(document).ready(function () {
     } else if (!validate_email.test(email)) {
       alertify.set("notifier", "position", "top-right");
       alertify.error("Please enter valid email");
-    } else {
+    } else if(csrf_token == "" || csrf_token ==null){
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
+    }else {
       $(".forget").prop("disabled", true);
       $(".load").show();
       $(".gradient-custom").hide();
@@ -21,7 +25,9 @@ $(document).ready(function () {
       $.ajax({
         type: "POST",
         url: "forget-password",
-        data: {
+        headers:{
+          "X-CSRFToken":csrf_token
+        },data: {
           email: email,
         },
         success: function (data) {
@@ -54,19 +60,23 @@ $(document).ready(function () {
   });
 });
 
-// after send otp. otp verfication 
+// after send otp. otp verfication -
 $(document).ready(function () {
   $(".load").hide();
   $(".enter").click(function (e) {
     e.preventDefault();
     const email_otp = $(".email_otp").val();
+    const csrf_token = $('#csrf_token').val();
     if (email_otp == "" || email_otp == null) {
       alertify.set("notifier", "position", "top-right");
       alertify.error("Please enter your OTP");
     } else if (isNaN(email_otp)) {
       alertify.set("notifier", "position", "top-right");
       alertify.error("Please enter valid OTP");
-    } else {
+    } else if(csrf_token == "" || csrf_token ==null){
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
+    }else {
       $(".load").show();
       $(".gradient-custom").hide();
       $(".show_load").css({
@@ -75,7 +85,9 @@ $(document).ready(function () {
       $.ajax({
         type: "POST",
         url: "email-verification",
-        data: { email_otp: email_otp },
+        headers:{
+          "X-CSRFToken":csrf_token
+        },data: { email_otp: email_otp },
         success: function (data) {
           if (data == "OTP verfication successfully") {
             $(".load").hide();
@@ -185,13 +197,14 @@ $(document).ready(function () {
 });
 
 
-// change password
+// change password -
 
 $(document).ready(function(){
   $('.change_password').click(function(e){
     e.preventDefault();
     const new_password = $('.new_password').val();
     const confirm_password = $('.confirm_password').val();
+    const csrf_token = $('#csrf_token').val();
     const validate_password = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{7,}$/;
     if (new_password == "" || new_password == null){
       alertify.set("notifier", "position", "top-right");
@@ -205,6 +218,9 @@ $(document).ready(function(){
     }else if (new_password != confirm_password){
       alertify.set("notifier", "position", "top-right");
       alertify.error("Password not match");
+    }else if(csrf_token == "" || csrf_token ==null){
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
     }else{
       $(".load").show();
       $(".gradient-custom").hide();
@@ -214,7 +230,9 @@ $(document).ready(function(){
       $.ajax({
         type: 'POST',
         ur: 'change-password',
-        data:{
+        headers:{
+          "X-CSRFToken":csrf_token
+        },data:{
           new_password : new_password,
           confirm_password: confirm_password,
         },success:function(data){

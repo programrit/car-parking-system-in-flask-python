@@ -13,10 +13,11 @@ class AdminOtherTable:
             admin = library.admin_exist()
             if 'admin_id' in session and 'login' in session and admin == "admin":
                 other_device_admin = library.other_device_admin_data()
+                current_admin_data = library.current_admin_data()
                 if other_device_admin != "no admin":
-                    return render_template('__admin_other_device_table.html',title="User Table",other_device_admin=other_device_admin)
+                    return render_template('__admin_other_device_table.html',title="User Table",other_device_admin=other_device_admin,current_admin_data=current_admin_data)
                 else:
-                    return render_template('__admin_other_device_table.html',title="User Table")
+                    return render_template('__admin_other_device_table.html',title="User Table",current_admin_data=current_admin_data)
             else:
                 session.clear()
                 return redirect('/admin-login', code=302)

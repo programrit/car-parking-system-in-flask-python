@@ -8,6 +8,7 @@ $(document).ready(function(){
         var password = $('.password').val();
         var validate_email = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
         var placeholder = document.getElementById('floatingCaptcha').placeholder;
+        const csrf_token = $('#csrf_token').val();
         var captcha_value =$('.captcha_value').val();
         if(email == "" || email ==null){
             alertify.set('notifier', 'position', 'top-right');
@@ -33,7 +34,9 @@ $(document).ready(function(){
             $.ajax({
                 type:"POST",
                 url:"admin-login",
-                data:{
+                headers:{
+                    "X-CSRFToken":csrf_token
+                },data:{
                     email:email,
                     password:password,
                 },success:function(data){
@@ -63,10 +66,13 @@ $(document).ready(function(){
     // login page refresh captcha button
     $(".refresh").click(function(e){
         e.preventDefault();
+        const csrf_token = $('#csrf_token').val();
         $.ajax({
             type:"POST",
                 url:"user-login",
-                data:{
+                headers:{
+                    "X-CSRFToken":csrf_token
+                },data:{
                     refresh:true
                 },success:function(data){
                     if(data=="something went wrong"){

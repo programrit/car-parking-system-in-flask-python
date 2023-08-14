@@ -41,31 +41,39 @@ $(document).ready(function () {
   });
 });
 
-// captcha from contact page
+// captcha from contact page -
 $(document).ready(function () {
   $(".load").hide();
   $(".captcha").prop("disabled", true);
   $(".refresh").click(function (e) {
     e.preventDefault();
-    $.ajax({
-      type: "POST",
-      url: "/",
-      data: {
-        refresh: true,
-      },
-      success: function (data) {
-        if (data == "something went wrong") {
-          alertify.set("notifier", "position", "top-right");
-          alertify.error(data);
-        } else {
-          $(".captcha").attr("placeholder", data);
-        }
-      },
-    });
+    const csrf_token = $('#csrf_token').val();
+    if(csrf_token == "" || csrf_token ==null){
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
+    }else{
+      $.ajax({
+        type: "POST",
+        url: "/",
+        headers:{
+          "X-CSRFToken":csrf_token
+        },data: {
+          refresh: true,
+        },
+        success: function (data) {
+          if (data == "something went wrong") {
+            alertify.set("notifier", "position", "top-right");
+            alertify.error(data);
+          } else {
+            $(".captcha").attr("placeholder", data);
+          }
+        },
+      });
+    }
   });
 });
 
-// contact data upload database
+// contact data upload database -
 $(document).ready(function () {
   $(".submit_contact").click(function (e) {
     e.preventDefault();
@@ -77,7 +85,8 @@ $(document).ready(function () {
     const validate_email = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
     const validate_phone = /^[6-9]\d{9}$/;
     const placeholder = document.getElementById("floatingCaptcha").placeholder;
-    const captcha_value = $(".captcha_value").val();
+    const captcha_value = $("#captcha_value").val();
+    const csrf_token = $('#csrf_token').val();
     const max_length = 250;
     if (contact_name == "" || contact_name == null) {
       alertify.set("notifier", "position", "top-right");
@@ -115,6 +124,9 @@ $(document).ready(function () {
     } else if (captcha_value != placeholder) {
       alertify.set("notifier", "position", "top-right");
       alertify.error("Invalid Captcha");
+    } else if(csrf_token == "" || csrf_token ==null){
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
     } else {
       $(".load").show();
       $(".gradient-custom").hide();
@@ -123,7 +135,9 @@ $(document).ready(function () {
       $.ajax({
         type: "POST",
         url: "/",
-        data: {
+        headers:{
+          "X-CSRFToken":csrf_token
+        },data: {
           contact_name: contact_name,
           contact_email: contact_email,
           contact_phone: contact_phone,
@@ -369,9 +383,7 @@ $(document).ready(function () {
   });
 });
 
-
-
-// update user data from modal
+// update user data from modal-
 $(document).ready(function () {
   $(".close").click(function () {
     $("#form")[0].reset();
@@ -379,12 +391,9 @@ $(document).ready(function () {
   $(".update").click(function (e) {
     e.preventDefault();
     const name = $(".name").val();
-    const email = $(".email").val();
-    const phone = $(".phone").val();
     const valid_name = /^[a-zA-Z]+$/;
-    const validate_email = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
-    const validate_phone = /^[6-9]\d{9}$/;
     const user_profile = document.getElementById("profile");
+    const csrf_token = $('#csrf_token').val();
     const count_image = user_profile.files.length;
     if (name == "" || name == null) {
       alertify.set("notifier", "position", "top-right");
@@ -395,21 +404,12 @@ $(document).ready(function () {
     } else if (!valid_name.test(name)) {
       alertify.set("notifier", "position", "top-right");
       alertify.error("Please enter valid name");
-    } else if (email == "" || email == null) {
-      alertify.set("notifier", "position", "top-right");
-      alertify.error("Please enter your email address");
-    } else if (!validate_email.test(email)) {
-      alertify.set("notifier", "position", "top-right");
-      alertify.error("Please enter valid email address");
-    } else if (phone == "" || phone == null) {
-      alertify.set("notifier", "position", "top-right");
-      alertify.error("Please enter your phone no");
-    } else if (!validate_phone.test(phone)) {
-      alertify.set("notifier", "position", "top-right");
-      alertify.error("Please enter valid phone no");
     } else if (count_image > 1 && count_image < 0) {
       alertify.set("notifier", "position", "top-right");
       alertify.error("Image allowed only one!");
+    } else if(csrf_token == "" || csrf_token ==null){
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
     } else {
       $(".update").prop("disabled", true);
       $(".reset").prop("disabled", true);
@@ -418,13 +418,13 @@ $(document).ready(function () {
       if (count_image == 1) {
         const formData = new FormData();
         formData.append("name", name);
-        formData.append("email", email);
-        formData.append("phone", phone);
         formData.append("profile", user_profile.files[0]);
         $.ajax({
           type: "POST",
           url: "/",
-          data: formData,
+          headers:{
+            "X-CSRFToken":csrf_token
+          },data: formData,
           contentType: false,
           processData: false,
           success: function (data) {
@@ -464,7 +464,9 @@ $(document).ready(function () {
         $.ajax({
           type: "POST",
           url: "/",
-          data: formData,
+          headers:{
+            "X-CSRFToken":csrf_token
+          },data: formData,
           contentType: false,
           processData: false,
           success: function (data) {
@@ -502,16 +504,19 @@ $(document).ready(function () {
 });
 
 
-// remove booking slot
-
+// remove booking slot -
 $(document).ready(function(){
   $('.delete_slot').click(function(e){
     e.preventDefault();
     id = $(this).val();
+    const csrf_token = $('#csrf_token').val();
     if(id == null || id == ""){
       alertify.set("notifier", "position", "top-right");
       alertify.error("Invalid data");
-    }else{
+    } else if(csrf_token == "" || csrf_token ==null){
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
+    } else{
       Swal.fire({
         title: 'Are you sure You want to delete the slot?',
         text: 'Once deleted you cannot recover the slot!',
@@ -528,7 +533,9 @@ $(document).ready(function(){
           $.ajax({
             type: 'POST',
             url:'/',
-            data: {
+            headers:{
+              "X-CSRFToken":csrf_token
+            },data: {
               id:id,
             },success:function(response){
               if (response == "delete"){
@@ -572,9 +579,7 @@ $(document).ready(function(){
 });
 
 
-
-// update password
-
+// update password -
 $(document).ready(function(){
   $('.upadte_password').click(function(e){
     e.preventDefault();
@@ -582,6 +587,7 @@ $(document).ready(function(){
     const old_password = $('.old_password').val();
     const new_password = $('.new_password').val();
     const confirm_password = $('.confirm_password').val();
+    const csrf_token = $('#csrf_token').val();
     if(old_password == "" || old_password == null){
       alertify.set("notifier", "position", "top-right");
       alertify.error("Please enter your old password");
@@ -597,13 +603,18 @@ $(document).ready(function(){
     }else if(new_password != confirm_password){
       alertify.set("notifier", "position", "top-right");
       alertify.error("Password not match");
-    }else{
+    } else if(csrf_token == "" || csrf_token ==null){
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
+    } else{
       $('.upadte_password').prop("disabled",true);
       $('.cancel_password').prop("disabled",true);
       $.ajax({
         type: 'POST',
         url: '/',
-        data: {
+        headers:{
+          "X-CSRFToken":csrf_token
+        },data: {
           old_password:old_password,
           new_password:new_password,
           confirm_password:confirm_password,
@@ -634,60 +645,75 @@ $(document).ready(function(){
 });
 
 
-// logout
-
+// logout - 
 $(document).ready(function(){
   $('.logout').click(function(){
     const logout = true;
-    $.ajax({
-      type: 'POST',
-      url :'/',
-      data:{
-        logout:logout
-      },success:function(data){
-        if(data == "logout"){
-          alertify.set("notifier", "position", "top-right");
-          alertify.success("Logout Successfully :)");
-          setTimeout(function () {
-            window.location.href = "/user-login"
-          }, 1000);
-        }else{
+    const csrf_token = $('#csrf_token').val();
+    if(csrf_token == "" || csrf_token ==null){
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
+    }else {
+      $.ajax({
+        type: 'POST',
+        url :'/',
+        headers:{
+          "X-CSRFToken":csrf_token
+        },data:{
+          logout:logout
+        },success:function(data){
+          if(data == "logout"){
+            alertify.set("notifier", "position", "top-right");
+            alertify.success("Logout Successfully :)");
+            setTimeout(function () {
+              window.location.href = "/user-login"
+            }, 1000);
+          }else{
+            alertify.set("notifier", "position", "top-right");
+            alertify.error("Something went wrong. Please try agin later");
+          }
+        },error:function(error){
           alertify.set("notifier", "position", "top-right");
           alertify.error("Something went wrong. Please try agin later");
         }
-      },error:function(error){
-        alertify.set("notifier", "position", "top-right");
-        alertify.error("Something went wrong. Please try agin later");
-      }
-    });
+      });
+    }
   });
 });
 
-
-
-// print invoice
-
+// print invoice -
 $(document).ready(function(){
   $('.pdf').click(function(e){
     e.preventDefault();
     const value = $(this).val();
-    $.ajax({
-      type:'POST',
-      url: '/',
-      data: {
-        value:value
-      },success:function(data){
-        if(data == "print"){
-          window.open("/print",'_blank');
-        }else{
+    const csrf_token = $('#csrf_token').val();
+    if (value == "" || value == null){
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid data");
+    }else if(csrf_token == "" || csrf_token ==null){
+      alertify.set("notifier", "position", "top-right");
+      alertify.error("Invalid csrf token");
+    }else{
+      $.ajax({
+        type:'POST',
+        url: '/',
+        headers:{
+          "X-CSRFToken":csrf_token
+        },data: {
+          value:value
+        },success:function(data){
+          if(data == "print"){
+            window.open("/print",'_blank');
+          }else{
+            alertify.set("notifier", "position", "top-right");
+            alertify.error(data);
+          }
+        },error:function(error){
           alertify.set("notifier", "position", "top-right");
-          alertify.error(data);
+          alertify.error("Something went wrong. Please try again later");
         }
-      },error:function(error){
-        alertify.set("notifier", "position", "top-right");
-        alertify.error("Something went wrong. Please try again later");
-      }
-    });
+      });
+    }
   });
 });
 

@@ -62,6 +62,7 @@
                     <td>
                         <form action="" method="POST">
                             <div class="d-flex">
+                                <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
                                 <button type="submit" value="{{ slot['id'] }}" class="btn btn-danger px-3 slot_id"><i class="fa fa-trash"></i></button>
                             </div>
                         </form>

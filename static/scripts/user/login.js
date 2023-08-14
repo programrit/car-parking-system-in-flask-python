@@ -9,6 +9,7 @@ $(document).ready(function(){
         var validate_email = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
         var placeholder = document.getElementById('floatingCaptcha').placeholder;
         var captcha_value =$('.captcha_value').val();
+        const csrf_token = $('#csrf_token').val();
         if(email == "" || email ==null){
             alertify.set('notifier', 'position', 'top-right');
             alertify.error("Please enter your email address");
@@ -24,6 +25,9 @@ $(document).ready(function(){
         }else if(captcha_value != placeholder){
             alertify.set('notifier', 'position', 'top-right');
             alertify.error("Invalid Captcha");
+        }else if(csrf_token == "" || csrf_token ==null){
+            alertify.set("notifier", "position", "top-right");
+            alertify.error("Invalid csrf token");
         }else{
             $(".load").show();
             $(".gradient-custom").hide();
@@ -33,7 +37,9 @@ $(document).ready(function(){
             $.ajax({
                 type:"POST",
                 url:"user-login",
-                data:{
+                headers:{
+                    "X-CSRFToken":csrf_token
+                },data:{
                     email:email,
                     password:password,
                 },success:function(data){
@@ -80,20 +86,29 @@ $(document).ready(function(){
     // login page refresh captcha button
     $(".refresh").click(function(e){
         e.preventDefault();
-        $.ajax({
-            type:"POST",
-                url:"user-login",
-                data:{
-                    refresh:true
-                },success:function(data){
-                    if(data=="something went wrong"){
-                        alertify.set('notifier', 'position', 'top-right');
-                        alertify.error(data);
-                    }else{
-                       $('.captcha').attr('placeholder',data);
+        const csrf_token = $('#csrf_token').val();
+        if(csrf_token == "" || csrf_token ==null){
+            alertify.set("notifier", "position", "top-right");
+            alertify.error("Invalid csrf token");
+        }else{
+            $.ajax({
+                type:"POST",
+                    url:"user-login",
+                    headers:{
+                        "X-CSRFToken":csrf_token
+                    },data:{
+                        refresh:true
+                    },success:function(data){
+                        if(data=="something went wrong"){
+                            alertify.set('notifier', 'position', 'top-right');
+                            alertify.error(data);
+                        }else{
+                           $('.captcha').attr('placeholder',data);
+                        }
                     }
-                }
-        });
+            });
+        }
+        
     });
 });
 

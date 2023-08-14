@@ -66,18 +66,11 @@
       </div>
       <form action="" method="POST" id="form" enctype="multipart/form-data">
         {% if user_data %}
+        <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
         <div class="modal-body">
           <div class="mb-4 mt-3">
             <input type="text" id="floatingInput" name="name" value="{{user_data.name}}" class="form-control  name"
               placeholder="Name" />
-          </div>
-          <div class="mb-4">
-            <input type="email" id="floatingInput" name="email" value="{{user_data.email}}" class="form-control  email"
-              placeholder="Email" />
-          </div>
-          <div class="mb-4">
-            <input type="number" id="floatingInput" name="phone" value="{{user_data.phone_no}}"
-              class="form-control  phone" placeholder="Phone No" />
           </div>
           <div class="mb-4">
             <label for="profile">Profile</label>
@@ -108,6 +101,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form action="" method="POST">
+        <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
         <div class="modal-body">
           <div class="mb-4 mt-3">
             <h6 class="fw-bolder text-center">Are you sure, you want to logout?</h6>
@@ -132,6 +126,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form action="" method="POST">
+        <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
         <div class="modal-body">
           <div class="mt-3 mb-3">
             <input type="password" id="floatingPassword" name="old_password" class="form-control old_password"

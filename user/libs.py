@@ -36,8 +36,8 @@ class Library:
         return UserLogin.share_user_data(self)
 
     # update user data
-    def update_user_data(self,name,email,phone,profile):
-        return UserLogin.update_user(self,name,email,phone,profile)
+    def update_user_data(self,phone,profile):
+        return UserLogin.update_user(self,phone,profile)
 
     #contact team send message 
     def contact(self,contact_name,contact_email,contact_phone,contact_message):
@@ -61,7 +61,11 @@ class Library:
 
     # password databse login user
     def password_update(self,old_password,new_password,confirm_password):
-        return PasswordUpdate.update_password(self,old_password,new_password,confirm_password)
+        delete_user_login = PasswordUpdate.delete_other_device_in_password_change(self)
+        if delete_user_login == "delete":
+            return PasswordUpdate.update_password(self,old_password,new_password,confirm_password)
+        else:
+            return PasswordUpdate.update_password(self,old_password,new_password,confirm_password)
 
     # forget password
     def forget_password(self,gmail):

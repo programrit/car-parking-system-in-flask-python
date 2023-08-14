@@ -5,7 +5,8 @@ import os,datetime
 load_dotenv()
 class Config(object):
     SECRET_KEY = '{}'.format(os.getenv("key"))
-    PERMANENT_SESSION_LIFETIME = datetime.timedelta(days=100)
+    SESSION_COOKIE_SECURE = True
+    PERMANENT_SESSION_LIFETIME = datetime.timedelta(days=10)
     UPLOAD_EXTENSIONS = ['.jpg','.png','.jpeg']
     # MAX_CONTENT_LENGTH =100*1024
     UPLOAD_PATH = 'static/user_profile/'

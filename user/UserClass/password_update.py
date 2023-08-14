@@ -11,6 +11,23 @@ class PasswordUpdate:
     def __init__(self):
        pass
 
+    def delete_other_device_in_password_change(self):
+        try:
+            cur = db.connection.cursor(MySQLdb.cursors.DictCursor)
+            user_id = session['id']
+            cur.execute("SELECT * FROM user_login WHERE user_id = %s", (user_id,))
+            fetch_data= cur.fetchone()
+            if fetch_data:
+                cur.execute("DELETE FROM user_login WHERE user_id=%s",(user_id,))
+                db.connection.commit()
+                cur.close()
+                return "delete"
+            else:
+                return "no user"
+
+        except Exception as e:
+            return "no user"
+
     def update_password(self,old_password,new_password,confirm_password):
         try:
             cur = db.connection.cursor(MySQLdb.cursors.DictCursor)

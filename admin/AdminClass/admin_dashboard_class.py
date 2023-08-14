@@ -61,3 +61,25 @@ class AdminDashboardVerify:
         except Exception as e:
             print(e)
             return "no slot"
+        
+    def delete_other_account_in_logout(self):
+        try:
+            admin_id = session['admin_id']
+            cur = db.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute("SELECT * FROM admin WHERE admin_id=%s",(admin_id,))
+            admin_other_data = cur.fetchone()
+            if admin_other_data:
+                get_device = admin_other_data['device_info']
+                current_device = request.headers.get('User-Agent')
+                if current_device == get_device:
+                    cur.execute("DELETE FROM admin_login WHERE admin_id=%s",(admin_id,))
+                    db.connection.commit()
+                    cur.close()
+                    return "logout"
+                else:
+                    return "logout"
+            else:
+                return "no user"
+        except Exception as e:
+            print(e)
+            return "no user"

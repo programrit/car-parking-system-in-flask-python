@@ -15,15 +15,19 @@ from admin.user_other_device_table import UserOtherTable
 from admin.slot_booking import UserSlotBooking
 from admin.admin_table import AdminTable
 from admin.admin_other_device_table import AdminOtherTable
+from admin.settings import Settings
+from flask_wtf import CSRFProtect
 
 app = Flask(__name__,static_folder="C:/Users/Ram/Desktop/car-parking-system/static")
 app.testing = True
 my_app = DebuggedApplication(app,evalex=True, pin_security=True)
 # serve(my_app,listen='*:500')
+app.config.from_object('config_module.Config')
 app.config.from_object('config_module.EmailConfig')
 app.config.from_object('config_module.DatabaseConfig')
 MySQL(app)
 Bcrypt(app)
+CSRFProtect(app)
 app.register_blueprint(Login.user_login)
 app.register_blueprint(Signup.signup)
 app.register_blueprint(Dashboard.dashboard)
@@ -34,6 +38,7 @@ app.register_blueprint(UserOtherTable.user_other_table)
 app.register_blueprint(UserSlotBooking.slot_booking)
 app.register_blueprint(AdminTable.admin_table)
 app.register_blueprint(AdminOtherTable.admin_other_table)
+app.register_blueprint(Settings.setting)
 
 @app.errorhandler(404)
 def page_not_found(e):

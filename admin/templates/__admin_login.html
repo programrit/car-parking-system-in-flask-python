@@ -17,6 +17,7 @@
                             <div class="mb-md-5 mt-md-2">
                                 <h2 class="fw-bold mb-4 text-uppercase">Admin Login</h2>
                                 <form action="admin-login" method="POST" class="form">
+                                    <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
                                     <div class="mb-4">
                                         <input type="email" id="floatingInput" name="email" class="form-control  email" placeholder="Email" />
                                     </div>
@@ -30,8 +31,7 @@
                                         <input type="text" name="captcha_value"  id="floatingCaptchas" class="form-control captcha_value" placeholder="Captcha">
                                         <button class="btn btn-light refresh" data-toggle="tooltip" data-placement="right" title="Refresh"  name="refresh" type="submit"><i class="fa-solid fa-arrows-rotate"></i></button>
                                     </div>
-                                    <p class="small pb-lg-2"><a class="text-white-50" href="admin-login/forget-password">Forgot password</a></p>
-                                    <button class="btn btn-outline-light px-5 login" data-toggle="tooltip" data-placement="right" title="{{title}}" type="submit">Login</button>
+                                    <button class="btn btn-outline-light px-5 login mt-2" data-toggle="tooltip" data-placement="right" title="{{title}}" type="submit">Login</button>
                                 </form>
                             </div>
                         </div>

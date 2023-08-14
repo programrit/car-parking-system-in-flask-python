@@ -64,6 +64,7 @@
                     <td>
                         <form action="" method="POST">
                             <div class="d-flex">
+                                <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
                                 <button class="btn btn-primary py-2 show_data" type="button" value="{{ users['id'] }}">
                                     <i class="fa fa-pen-to-square"></i>
                                 </button>
@@ -90,6 +91,7 @@
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="" method="POST">
+                <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="modal-body">
                     <div class="mb-3 mt-3">
                         <input type="text" id="floatingInput" name="name" class="form-control  name"
@@ -121,6 +123,7 @@
     </div>
 </div>
 
+
 <div class="modal fade " id="staticModalUpdate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="staticLabelUpdate" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -130,6 +133,7 @@
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="" method="POST" id="form">
+                <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="modal-body">
                     <div class="mb-3 mt-3">
                         <input type="text" id="floatingInput" name="name" class="form-control update_name"

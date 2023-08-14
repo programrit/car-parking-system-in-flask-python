@@ -14,10 +14,11 @@ class UserTable:
             admin = library.admin_exist()
             if 'admin_id' in session and 'login' in session and admin == "admin":
                 user_data = library.user_data()
+                current_admin_data = library.current_admin_data()
                 if user_data != "no users":
-                    return render_template('__user_table.html',title="User Table",user_data=user_data)
+                    return render_template('__user_table.html',title="User Table",user_data=user_data,current_admin_data=current_admin_data)
                 else:
-                    return render_template('__user_table.html',title="User Table")
+                    return render_template('__user_table.html',title="User Table",current_admin_data=current_admin_data)
             else:
                 session.clear()
                 return redirect('/admin-login', code=302)

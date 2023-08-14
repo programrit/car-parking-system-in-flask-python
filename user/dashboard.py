@@ -131,11 +131,9 @@ class Dashboard:
             try:
                 profile = request.files.get("profile")
                 name = request.form['name']
-                email = request.form['email']
-                phone = request.form['phone']
                 if profile == None:
                     profile = "empty"
-                    update = library.update_user_data(name,email,phone,profile)
+                    update = library.update_user_data(name,profile)
                     if update == "update":
                         return "update successfully"
                     elif update == "update failed":
@@ -156,7 +154,7 @@ class Dashboard:
                         else:
                             file_name ="IMG-"+datetime.now().isoformat(sep=" ",timespec="seconds").replace(':','').replace('-','').replace(' ','')+str(str(random.randint(99999,999999)))+file_ext
                             profile.save(os.path.join("C:/Users/Ram/Desktop/test/static/user_profile/",file_name))
-                            update = library.update_user_data(name,email,phone,file_name)
+                            update = library.update_user_data(name,file_name)
                             if update == "update":
                                 return "update successfully"
                             elif update == "update failed":

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% include 'admin_header.html' %}
+    <body class="sb-nav-fixed">
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border text-success load" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Loading..</span>
+            </div>
+        </div>
+        {% include '__top_navbar.html' %}
+        <div id="layoutSidenav">
+            {% include '__sidebar.html' %}
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">Settings</h1>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item"><a href="admin-dashboard">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Change Password</li>
+                        </ol>
+                        {% include '__change_password.html' %} 
+                    </div>
+                </main>
+                {% include '__footer.html' %} 
+            </div>
+        </div>
+    </body>
+    <script src="{{url_for('static',filename='scripts/admin/dashboard.js')}}" crossorigin="anonymous"></script>
+</html>
