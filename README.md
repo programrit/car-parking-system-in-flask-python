@@ -1,5 +1,3 @@
-# car-parking-system-in-flask-python
-
 # Car Parking System
 
 Welcome to the Car Parking System, a mini web application that allows customers to book parking slots for a specified duration. This system is built using Flask, HTML, CSS, Bootstrap, and JavaScript.
